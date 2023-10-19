@@ -121,7 +121,6 @@ func main() {
 	}
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/login/oauth/authorize", authorize)
-	http.HandleFunc("/login/oauth/authorize/", authorize) // TODO: remove this
 	http.HandleFunc("/login/oauth/access_token", accessToken)
 	http.HandleFunc("/user", user)
 
