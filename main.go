@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
@@ -16,7 +17,8 @@ func hello(w http.ResponseWriter, req *http.Request) {
 }
 
 func authorize(w http.ResponseWriter, req *http.Request) {
-	// curl "https://github.com/login/oauth/authorize/?client_id=${OAUTH_CLIENT_ID}&redirect_uri=${OAUTH_REDIRECT_URI}&state=this-is-a-random-state"
+  fmt.Println("authorize")
+	// curl "https://github.com/login/oauth/authorize/?client_id=${OAUTH_CLIENT_ID}&redirect_uri=${OAUTH_CALLBACK_URI}&state=this-is-a-random-state"
 	if req.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -30,7 +32,7 @@ func authorize(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if redirectUri != oauthRedirectUri {
+	if redirectUri != oauthCallbackUri {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -102,23 +104,33 @@ func user(w http.ResponseWriter, req *http.Request) {
 
 var oauthClientId = os.Getenv("OAUTH_CLIENT_ID")
 var oauthClientSecret = os.Getenv("OAUTH_CLIENT_SECRET")
-var oauthRedirectUri = os.Getenv("OAUTH_REDIRECT_URI")
-var oauthUsername = "awkhan"
-var oauthUserId = 123456
-var oauthCode = "this-is-a-random-code"
-var oauthAccessToken = "this-is-a-random-access-token"
+var oauthCallbackUri = os.Getenv("OAUTH_CALLBACK_URI")
+var oauthUsername = os.Getenv("OAUTH_USERNAME")
+var oauthUserId = os.Getenv("OAUTH_USERID")
+var oauthCode = RandomString(32)
+var oauthAccessToken = RandomString(32)
 var port = os.Getenv("PORT")
 
 func main() {
 	if oauthClientId == "" {
 		panic("OAUTH_CLIENT_ID is empty")
 	}
-	if oauthRedirectUri == "" {
-		panic("OAUTH_REDIRECT_URI is empty")
+	if oauthClientSecret == "" {
+		panic("OAUTH_CLIENT_SECRET is empty")
+	}
+	if oauthCallbackUri == "" {
+		panic("OAUTH_CALLBACK_URI is empty")
 	}
 	if port == "" {
 		port = "8090"
 	}
+	if oauthUsername == "" {
+		oauthUsername = "github-oauth2-login-mock-server-dummy-user"
+	}
+	if oauthUserId == "" {
+		oauthUserId = "github-oauth2-login-mock-server-dummy-user-id"
+	}
+
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/login/oauth/authorize", authorize)
 	http.HandleFunc("/login/oauth/access_token", accessToken)
@@ -126,4 +138,14 @@ func main() {
 
 	fmt.Fprintf(os.Stderr, "Listening on port %s\n", port)
 	http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
+}
+
+func RandomString(n int) string {
+  var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+    b := make([]rune, n)
+    for i := range b {
+      b[i] = letterRunes[rand.Intn(len(letterRunes))]
+    }
+  return string(b)
 }
