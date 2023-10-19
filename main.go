@@ -9,6 +9,7 @@ import (
 )
 
 func hello(w http.ResponseWriter, req *http.Request) {
+  fmt.Println("hello")
 	if req.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -51,6 +52,7 @@ func authorize(w http.ResponseWriter, req *http.Request) {
 }
 
 func accessToken(w http.ResponseWriter, req *http.Request) {
+  fmt.Println("accessToken")
 	//  curl -X POST -H 'Accept: application/json' "https://github.com/login/oauth/access_token?client_id=${OAUTH_CLIENT_ID}&client_secret=${OAUTH_CLIENT_SECRET}&code=this-is-a-random-code"
 	if req.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -79,6 +81,7 @@ func accessToken(w http.ResponseWriter, req *http.Request) {
 }
 
 func user(w http.ResponseWriter, req *http.Request) {
+  fmt.Println("user")
 	//  curl -H "Authorization: Bearer this-is-a-random-access-token' -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' https://api.github.com/user
 	if req.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
