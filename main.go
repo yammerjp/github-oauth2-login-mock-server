@@ -26,7 +26,7 @@ func authorize(w http.ResponseWriter, req *http.Request) {
 	state := req.URL.Query().Get("state")
 	redirectUri := req.URL.Query().Get("redirect_uri")
 
-	if clientId != oauthClientKey {
+	if clientId != oauthClientId {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -59,7 +59,7 @@ func accessToken(w http.ResponseWriter, req *http.Request) {
 	clientSecret := req.URL.Query().Get("client_secret")
 	code := req.URL.Query().Get("code")
 
-	if clientId != oauthClientKey {
+	if clientId != oauthClientId {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -100,7 +100,7 @@ func user(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte(fmt.Sprintf(`{"login": "%s", "id": %d}`, oauthUsername, oauthUserId)))
 }
 
-var oauthClientKey = os.Getenv("OAUTH_CLIENT_KEY")
+var oauthClientId = os.Getenv("OAUTH_CLIENT_ID")
 var oauthClientSecret = os.Getenv("OAUTH_CLIENT_SECRET")
 var oauthRedirectUri = os.Getenv("OAUTH_REDIRECT_URI")
 var oauthUsername = "awkhan"
@@ -110,8 +110,8 @@ var oauthAccessToken = "this-is-a-random-access-token"
 var port = os.Getenv("PORT")
 
 func main() {
-	if oauthClientKey == "" {
-		panic("OAUTH_CLIENT_KEY is empty")
+	if oauthClientId == "" {
+		panic("OAUTH_CLIENT_ID is empty")
 	}
 	if oauthRedirectUri == "" {
 		panic("OAUTH_REDIRECT_URI is empty")

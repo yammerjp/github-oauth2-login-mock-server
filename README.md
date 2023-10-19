@@ -5,7 +5,7 @@ This is a HTTP mock server of GitHub login for E2E test.
 ## run
 
 ```sh
-OAUTH_CLIENT_KEY=clientkey OAUTH_CLIENT_SECRET=clientsecret OAUTH_REDIRECT_URI="http://localhost:8080/hello" PORT=8080 go run main.go
+OAUTH_CLIENT_ID=clientkey OAUTH_CLIENT_SECRET=clientsecret OAUTH_REDIRECT_URI="http://localhost:8080/hello" PORT=8080 go run main.go
 ```
 
 ```sh
