@@ -102,7 +102,7 @@ func user(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf(`{"login": "%s", "id": %d}`, oauthUsername, oauthUserId)))
+	w.Write([]byte(fmt.Sprintf(`{"login": "%s", "id": %s}`, oauthUsername, oauthUserId)))
 }
 
 var oauthClientId = os.Getenv("OAUTH_CLIENT_ID")
@@ -131,7 +131,7 @@ func main() {
 		oauthUsername = "github-oauth2-login-mock-server-dummy-user"
 	}
 	if oauthUserId == "" {
-		oauthUserId = "github-oauth2-login-mock-server-dummy-user-id"
+		oauthUserId = "9999"
 	}
 
 	http.HandleFunc("/hello", hello)
